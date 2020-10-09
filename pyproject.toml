@@ -6,6 +6,7 @@ authors = ["Ron Heimann <ron.heimann@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+firebase-admin = "^4.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
