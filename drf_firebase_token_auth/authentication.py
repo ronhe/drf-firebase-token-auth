@@ -11,18 +11,26 @@ from .settings import api_settings
 from . import models
 
 
-_User = auth.get_user_model()
+FIREBASE_APP_NAME = 'drf_firebase_token_auth'
 
-_firebase_credentials = firebase_admin.credentials.Certificate(
-    api_settings.FIREBASE_SERVICE_ACCOUNT_KEY_FILE_PATH
-)
-_firebase_app = firebase_admin.initialize_app(_firebase_credentials,
-                                              name='drf_firebase_token_auth')
+_User = auth.get_user_model()
 
 
 class FirebaseTokenAuthentication(authentication.TokenAuthentication):
     """Firebase token authentication class"""
     keyword = api_settings.AUTH_HEADER_TOKEN_KEYWORD
+
+    def __init__(self):
+        try:
+            self._firebase_app = firebase_admin.get_app(FIREBASE_APP_NAME)
+        except ValueError:
+            firebase_credentials = firebase_admin.credentials.Certificate(
+                api_settings.FIREBASE_SERVICE_ACCOUNT_KEY_FILE_PATH
+            )
+            self._firebase_app = firebase_admin.initialize_app(
+                firebase_credentials,
+                name=FIREBASE_APP_NAME
+            )
 
     @staticmethod
     def _extract_email_from_firebase_user(
@@ -63,7 +71,7 @@ class FirebaseTokenAuthentication(authentication.TokenAuthentication):
         try:
             decoded_token = firebase_auth.verify_id_token(
                 token,
-                app=_firebase_app,
+                app=self._firebase_app,
                 check_revoked=api_settings.VERIFY_FIREBASE_TOKEN_NOT_REVOKED
             )
         except ValueError:
@@ -86,7 +94,7 @@ class FirebaseTokenAuthentication(authentication.TokenAuthentication):
                 )
 
         return firebase_auth.get_user(decoded_token['uid'],
-                                      app=_firebase_app)
+                                      app=self._firebase_app)
 
     def get_local_user(self, firebase_user: firebase_auth.UserRecord) -> _User:
         """Get a local user from a Firebase user.
