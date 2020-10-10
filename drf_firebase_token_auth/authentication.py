@@ -41,7 +41,7 @@ class FirebaseTokenAuthentication(authentication.TokenAuthentication):
 
         Args:
             firebase_user: A Firebase user.
-            email_verified_required: Is a verified email required.
+            ignore_unverified_email: Is a verified email required.
 
         Returns:
             User's email address or None if not found.
