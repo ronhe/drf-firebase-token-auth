@@ -41,15 +41,18 @@ class FirebaseTokenAuthTestCase(test.TestCase):
             )
         )
 
-    @mock.patch('drf_firebase_token_auth.authentication.firebase_auth')
-    def test_authenticate_firebase_user(self, firebase_auth):
+    @mock.patch('drf_firebase_token_auth.authentication.firebase_auth',
+                spec=firebase_auth)
+    def test_authenticate_firebase_user(self, mock_firebase_auth):
         uid = '1234'
         token ='abcd'
-        firebase_auth.verify_id_token.return_value = {'uid': uid}
+        mock_firebase_auth.verify_id_token.return_value = {'uid': uid}
         self.assertEqual(
-            firebase_auth.get_user(token,
-                                   app=self.firebase_token_auth._firebase_app,
-                                   check_revoked=True),
+            mock_firebase_auth.get_user(
+                token,
+                app=self.firebase_token_auth._firebase_app,
+                check_revoked=True
+            ),
             self.firebase_token_auth.authenticate_firebase_user(token)
         )
 
@@ -118,3 +121,73 @@ class FirebaseTokenAuthTestCase(test.TestCase):
             ),
             fb_user
         )
+
+    def test_authenticate_credentials_local_user_exists(self):
+        token = '1234'
+
+        mock_local_user = mock.MagicMock(spec=self.User)
+        mock_fb_user = mock.MagicMock(spec=firebase_auth.UserRecord)
+        mock_local_fb_user = mock.MagicMock(spec=models.FirebaseUser)
+
+        mock_authenticate_firebase_user = \
+            mock.MagicMock(return_value=mock_fb_user)
+        self.firebase_token_auth.authenticate_firebase_user = \
+            mock_authenticate_firebase_user
+
+        mock_get_local_user = mock.MagicMock(return_value=mock_local_user)
+        self.firebase_token_auth.get_local_user = \
+            mock_get_local_user
+
+        mock_get_or_create_local_firebase_user = \
+            mock.MagicMock(return_value=mock_local_fb_user)
+        self.firebase_token_auth.get_or_create_local_firebase_user = \
+            mock_get_or_create_local_firebase_user
+
+        self.assertEqual(
+            self.firebase_token_auth.authenticate_credentials(token)[0],
+            mock_local_user
+        )
+
+        mock_authenticate_firebase_user.assert_called_with(token)
+
+        mock_get_local_user.assert_called_with(mock_fb_user)
+
+        mock_get_or_create_local_firebase_user.assert_called_with(
+            firebase_user=mock_fb_user,
+            local_user=mock_local_user,
+        )
+
+    # def test_authenticate_credentials_local_user_created(self):
+        # token = '1234'
+        #
+        # mock_local_user = mock.MagicMock(spec=self.User)
+        # mock_fb_user = mock.MagicMock(spec=firebase_auth.UserRecord)
+        # mock_local_fb_user = mock.MagicMock(spec=models.FirebaseUser)
+        #
+        # mock_authenticate_firebase_user = \
+        #     mock.MagicMock(return_value=mock_fb_user)
+        # self.firebase_token_auth.authenticate_firebase_user = \
+        #     mock_authenticate_firebase_user
+        #
+        # mock_get_local_user = mock.MagicMock(return_value=mock_local_user)
+        # self.firebase_token_auth.get_local_user = \
+        #     mock_get_local_user
+        #
+        # mock_get_or_create_local_firebase_user = \
+        #     mock.MagicMock(return_value=mock_local_fb_user)
+        # self.firebase_token_auth.get_or_create_local_firebase_user = \
+        #     mock_get_or_create_local_firebase_user
+        #
+        # self.assertEqual(
+        #     self.firebase_token_auth.authenticate_credentials(token)[0],
+        #     mock_local_user
+        # )
+        #
+        # mock_authenticate_firebase_user.assert_called_with(token)
+        #
+        # mock_get_local_user.assert_called_with(mock_fb_user)
+        #
+        # mock_get_or_create_local_firebase_user.assert_called_with(
+        #     firebase_user=mock_fb_user,
+        #     local_user=mock_local_user,
+        # )
