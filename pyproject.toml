@@ -1,15 +1,32 @@
 [tool.poetry]
 name = "drf-firebase-token-auth"
-version = "0.1.0"
-description = ""
+version = "0.2.0"
+description = "Firebase token authentication for Django Rest Framework"
 authors = ["Ron Heimann <ron.heimann@gmail.com>"]
+license = "MIT"
+readme = "README.rst"
+homepage = "https://github.com/ronhe/drf-firebase-token-auth"
+repository = "https://github.com/ronhe/drf-firebase-token-auth"
+keywords = ["Django", "Rest Framework", "Firebase", "Authentication", "Token"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Topic :: Internet :: WWW/HTTP",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6"
 firebase-admin = "^4.4.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
