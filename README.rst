@@ -6,6 +6,23 @@ and based on `Rest Framework's TokenAuthentication <https://www.django-rest-fram
 ``drf-firebase-token-auth`` should be just what you need to enable client
 authentication using `Firebase Authentication <https://firebase.google.com/docs/auth>`_.
 
+How Does It Work
+----------------
+#. For each REST request, a Firebase ID Token is extracted from the
+   Authorization header.
+
+#. The ID Token is verified against Firebase.
+
+#. If the Firebase user is already known (A record with the corresponding UID
+   exists in the `FirebaseUser` table), then the corresponding local `User` is
+   successfully authenticated.
+
+#. Otherwise, the unfamiliar Firebase user is attempted to be matched against
+   a local `User` record by `email` or `username`. If no match exists,
+   then a new `User` is created. Its `username` is assigned either to the
+   Firebase email or UID (in case an email is not available).
+   Finally, the newly created local `User` is successfully authenticated.
+
 Installation
 ------------
 #. Install the pip package:
@@ -79,3 +96,5 @@ Installation
 
     $ python manage.py migrate drf-firebase-token-auth
 
+#. Have your clients adding ``Token <Firebase ID Token>`` in the
+   Authorization Header of their REST requests.
