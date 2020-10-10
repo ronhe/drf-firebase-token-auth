@@ -20,7 +20,7 @@ class FirebaseTokenAuthentication(authentication.TokenAuthentication):
     """Firebase token authentication class"""
     keyword = api_settings.AUTH_HEADER_TOKEN_KEYWORD
 
-    def __init__(self):
+    def __init__(self) -> None:
         try:
             self._firebase_app = firebase_admin.get_app(FIREBASE_APP_NAME)
         except ValueError:
@@ -35,7 +35,7 @@ class FirebaseTokenAuthentication(authentication.TokenAuthentication):
     @staticmethod
     def _extract_email_from_firebase_user(
             firebase_user: firebase_auth.UserRecord,
-            email_verified_required=api_settings.VERIFY_FIREBASE_TOKEN_NOT_REVOKED,
+            ignore_unverified_email=api_settings.IGNORE_FIREBASE_UNVERIFIED_EMAIL,
     ) -> Union[str, None]:
         """Extract user email from a Firebase user.
 
@@ -46,7 +46,7 @@ class FirebaseTokenAuthentication(authentication.TokenAuthentication):
         Returns:
             User's email address or None if not found.
         """
-        if email_verified_required:
+        if ignore_unverified_email:
             if firebase_user.email_verified and firebase_user.email:
                 return firebase_user.email
             else:
