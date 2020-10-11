@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "drf-firebase-token-auth"
-version = "0.2.0"
+version = "0.2.1"
 description = "Firebase token authentication for Django Rest Framework"
 authors = ["Ron Heimann <ron.heimann@gmail.com>"]
 license = "MIT"
