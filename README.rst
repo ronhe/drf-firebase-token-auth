@@ -1,7 +1,9 @@
 Firebase Token Authentication for Django Rest Framework
 =======================================================
 
-[![pypi version](https://img.shields.io/pypi/v/drf-firebase-token-auth)](https://pypi.org/project/drf-firebase-token-auth/)
+.. image:: https://img.shields.io/pypi/v/drf-firebase-token-auth
+    :alt: PyPI
+    :target: https://pypi.org/project/drf-firebase-token-auth/
 
 Inspired by `garyburgmann/drf-firebase-auth <https://github.com/garyburgmann/drf-firebase-auth>`_
 and based on `Rest Framework's TokenAuthentication <https://www.django-rest-framework.org/api-guide/authentication/#tokenauthentication>`_,
