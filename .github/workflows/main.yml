@@ -33,3 +33,5 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          poetry install
+          poetry run python runtests.py
