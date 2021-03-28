@@ -43,7 +43,7 @@ Installation
     # settings.py
     INSTALLED_APS = [
         ...
-        'drf-firebase-token-auth',
+        'drf_firebase_token_auth',
     ]
 
 #. Add ``FirebaseTokenAuthentication`` to Rest Framework's list of default
@@ -74,7 +74,7 @@ Installation
         # REQUIRED SETTINGS:
 
         # Path to JSON file with firebase secrets
-        'FIREBASE_SERVICE_ACCOUNT_KEY_FILE_PATH': r'/mnt/c/Users/ronhe/Google Drive/ProgramsData/WizWot/paywiz-c4b4f-firebase-adminsdk-ekbjf-9b7776879a.json',
+        'FIREBASE_SERVICE_ACCOUNT_KEY_FILE_PATH': r'/home/user/myproj-firebase-adminsdk.json',
 
 
         # OPTIONAL SETTINGS:
